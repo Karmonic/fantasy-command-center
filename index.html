@@ -1,222 +1,295 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a1020">
+  <meta name="description" content="A private, mobile-friendly command center for your Yahoo fantasy teams.">
   <title>Fantasy Command Center</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #101827;
-      color: #f4f6fa;
-      max-width: 760px;
-      margin: 60px auto;
-      padding: 24px;
-      line-height: 1.7;
+    :root { color-scheme: dark; --bg:#0a1020; --panel:#141e31; --panel2:#1a2940; --line:#2c3c53; --ink:#f5f8fd; --muted:#a9bad1; --blue:#63c9ff; --teal:#6ee4c8; --amber:#f6c875; --red:#ff9eaa; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:radial-gradient(circle at 75% -10%, #193557 0, transparent 32%),var(--bg); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--blue); }
+    button { font:inherit; cursor:pointer; }
+    button:focus-visible, a:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+    .wrap { max-width:1120px; margin:auto; padding:22px 24px 90px; }
+    .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+    .brand { display:flex; align-items:center; gap:13px; }
+    .logo { width:48px; height:48px; flex:none; display:grid; place-items:center; border-radius:15px; background:linear-gradient(140deg,#59c6fa,#4585d3); color:#06172c; font-size:25px; font-weight:900; box-shadow:0 9px 28px #0004; }
+    .brand h1 { font-size:19px; letter-spacing:-.5px; line-height:1.15; margin:0; }
+    .sub { font-size:12px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin:4px 0 0; }
+    .pill { display:inline-flex; align-items:center; gap:8px; border-radius:999px; background:#213147; border:1px solid #334861; padding:7px 12px; color:#d4e1f1; font-size:12px; font-weight:700; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--amber); flex:none; }
+    .dot.good { background:var(--teal); } .dot.bad { background:var(--red); }
+    .tabs { display:flex; gap:8px; overflow-x:auto; margin:25px 0 26px; padding-bottom:4px; scrollbar-width:thin; }
+    .tab { color:var(--muted); border:1px solid transparent; background:transparent; white-space:nowrap; padding:9px 17px; border-radius:11px; font-weight:700; }
+    .tab[aria-selected="true"] { background:#223b59; border-color:#365677; color:var(--ink); }
+    .tab:hover { color:var(--ink); }
+    .panel[hidden] { display:none; }
+    .eyebrow { color:var(--teal); text-transform:uppercase; letter-spacing:.13em; font-weight:800; font-size:12px; margin:0 0 8px; }
+    .hero { display:grid; grid-template-columns:1.35fr 1fr; background:linear-gradient(112deg,#1d3753,#152439 70%); border:1px solid #34506d; border-radius:20px; overflow:hidden; }
+    .hero-main { padding:34px; }
+    .hero h2 { margin:0 0 10px; font-size:clamp(26px,4vw,39px); line-height:1.14; letter-spacing:-1px; }
+    .hero p { color:#c6d6e9; max-width:540px; margin:0 0 20px; }
+    .hero-aside { padding:30px; background:#111e2e90; display:flex; flex-direction:column; justify-content:center; gap:13px; }
+    .tiny-heading { color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.08em; font-size:11px; }
+    .connection { display:flex; gap:10px; align-items:center; font-size:14px; }
+    .check { color:var(--teal); font-weight:900; }
+    .waiting { color:var(--amber); font-weight:900; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { border:1px solid #416385; background:#243b56; color:white; border-radius:11px; padding:12px 16px; font-weight:800; }
+    .btn.primary { background:var(--blue); color:#09243b; border-color:var(--blue); }
+    .btn:disabled { opacity:.52; cursor:wait; }
+    .btn:hover:not(:disabled) { filter:brightness(1.1); }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:10px; margin:31px 0 14px; }
+    .section-head h2 { margin:0; font-size:21px; letter-spacing:-.4px; }
+    .muted { color:var(--muted); } .small { font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:17px; padding:22px; min-width:0; }
+    .card h3 { margin:0 0 5px; font-size:18px; }
+    .card p { margin:6px 0; }
+    .team-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; font-weight:900; color:#0b1d2c; background:#7dc7e9; margin-bottom:16px; }
+    .team-icon.green { background:#84dbc1; } .team-icon.gold { background:#ffcf81; }
+    .tag { display:inline-block; color:#d9e5f3; background:#26364c; border:1px solid #354960; border-radius:7px; padding:3px 8px; font-size:11px; font-weight:800; }
+    .note { border-left:3px solid var(--amber); background:#302d28; border-radius:0 10px 10px 0; padding:13px 16px; color:#ffedcd; font-size:13px; margin-top:18px; }
+    .status-text { font-size:14px; min-height:1.5em; color:#d9e7f7; margin-top:16px; overflow-wrap:anywhere; }
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .feature { padding:22px; border:1px solid var(--line); background:var(--panel); border-radius:17px; }
+    .feature .symbol { font-size:27px; margin-bottom:14px; display:block; }
+    .feature h3 { margin:0 0 8px; font-size:17px; }
+    .feature p { color:var(--muted); font-size:14px; margin:0; }
+    .workspace { max-width:770px; }
+    .workspace h2 { font-size:29px; margin:0 0 7px; }
+    .workspace .lead { color:var(--muted); margin:0 0 22px; }
+    .empty { padding:40px 28px; border:1px dashed #4a6583; background:#14253a; border-radius:18px; text-align:center; }
+    .empty .symbol { font-size:39px; }
+    .empty h3 { font-size:19px; margin:9px 0; }
+    .empty p { color:var(--muted); max-width:470px; margin:0 auto 16px; }
+    .footer { margin-top:38px; padding:22px 0; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    .footer a { color:#b5daf2; }
+    @media(max-width:760px) {
+      .wrap { padding:18px 16px 85px; }
+      .header { align-items:flex-start; }
+      .hero { grid-template-columns:1fr; }
+      .hero-main, .hero-aside { padding:23px; }
+      .grid { grid-template-columns:1fr; }
+      .two { grid-template-columns:1fr; }
+      .card { padding:19px; }
+      .tabs { margin:20px -16px 20px; padding:0 16px 7px; }
+      .tab { padding:10px 13px; }
+      .actions .btn { width:100%; }
+      .section-head { align-items:start; flex-direction:column; }
     }
-    h1 { color: #55c7ff; }
-    h2 { margin-top: 32px; }
-    .status {
-      color: #aab9ce;
-      font-size: 14px;
-    }
+    @media(min-width:761px) and (max-width:930px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(prefers-reduced-motion:no-preference) { .btn,.tab { transition:filter .15s ease,background-color .15s ease; } }
   </style>
 </head>
 <body>
-  <h1>Fantasy Command Center</h1>
-  <p class="status">Private Project | In Development</p>
+<div class="wrap">
+  <header class="header">
+    <div class="brand"><div class="logo" aria-hidden="true">F</div><div><h1>Fantasy Command Center</h1><p class="sub">Private fantasy football workspace</p></div></div>
+    <div class="pill" id="connection-pill"><span class="dot" id="connection-dot"></span><span id="connection-label">API access pending</span></div>
+  </header>
 
-  <h2>About</h2>
-  <p>
-    Fantasy Command Center is a private, noncommercial
-    fantasy football analytics application currently
-    under development.
-  </p>
+  <nav class="tabs" aria-label="Dashboard sections" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="teams">My teams</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="lineups">Lineups</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="waivers">Waivers</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="connection">Connection</button>
+  </nav>
 
-  <h2>Purpose</h2>
-  <p>
-    The application is designed to securely connect
-    to Yahoo Fantasy Sports using authorized,
-    read-only API access.
-  </p>
+  <main>
+    <section id="tab-overview" class="panel" role="tabpanel">
+      <div class="hero">
+        <div class="hero-main">
+          <p class="eyebrow">Your season, one command center</p>
+          <h2>Fantasy decisions,<br>all in one place.</h2>
+          <p>A mobile-first home for your Yahoo teams, roster checks, starting lineups and waiver decisions.</p>
+          <div class="actions"><button class="btn primary" type="button" data-connect>Connect to Yahoo</button><button class="btn" type="button" data-goto="teams">View planned teams</button></div>
+          <div class="status-text" id="home-status" role="status" aria-live="polite">Waiting for Yahoo Fantasy API access.</div>
+        </div>
+        <aside class="hero-aside">
+          <div class="tiny-heading">System status</div>
+          <div class="connection"><span class="check">✓</span> GitHub Pages website online</div>
+          <div class="connection"><span class="check">✓</span> Cloudflare API backend online</div>
+          <div class="connection"><span class="check">✓</span> Yahoo sign-in configured</div>
+          <div class="connection"><span class="waiting" id="api-status-icon">◷</span> <span id="api-status-label">Fantasy data connection not verified</span></div>
+          <div class="tiny-heading" style="margin-top:5px">Live rosters</div>
+          <div class="muted small">Not loaded yet. No sample player data is being presented as real.</div>
+        </aside>
+      </div>
+      <div class="section-head"><h2>My fantasy teams</h2><span class="muted small">Saved labels · not synced with Yahoo</span></div>
+      <div class="grid" id="overview-teams">
+        <div class="card"><div class="team-icon">F</div><h3>Foxholes</h3><p class="muted small">Yahoo · work league</p><span class="tag">Awaiting sync</span></div>
+        <div class="card"><div class="team-icon green">S</div><h3>Sol's Folly</h3><p class="muted small">Yahoo · public league</p><span class="tag">Awaiting sync</span></div>
+        <div class="card"><div class="team-icon gold">M</div><h3>Muthiny on the Bounty</h3><p class="muted small">Yahoo · Death League</p><span class="tag">Awaiting sync</span></div>
+      </div>
+      <div class="note">The teams above are familiar names added for navigation, not information retrieved from Yahoo. Scores, lineups and player data will only appear after real API access is verified and roster retrieval is implemented.</div>
+      <div class="section-head"><h2>Built for the decisions that matter</h2></div>
+      <div class="two">
+        <div class="feature"><span class="symbol" aria-hidden="true">🏈</span><h3>Lineup checks</h3><p>See your starters and bench together when authorized roster access is available.</p></div>
+        <div class="feature"><span class="symbol" aria-hidden="true">📈</span><h3>Waiver review</h3><p>Plan adds and drops with clear roster needs and your own league settings.</p></div>
+      </div>
+    </section>
 
-  <h2>Planned Features</h2>
-  <ul>
-    <li>Fantasy league and roster synchronization</li>
-    <li>Waiver-wire and free-agent analysis</li>
-    <li>Starting lineup and matchup evaluation</li>
-    <li>Historical roster and transaction tracking</li>
-  </ul>
+    <section id="tab-teams" class="panel workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Teams</p><h2>Your Yahoo teams</h2><p class="lead">We'll populate current leagues and rosters only after Yahoo authorizes the Fantasy API request.</p>
+      <div class="empty"><div class="symbol" aria-hidden="true">🏟️</div><h3>Roster sync not connected</h3><p>The Yahoo login flow works, but the Fantasy API previously returned HTTP 403. We won't invent standings or rosters.</p><button class="btn primary" type="button" data-goto="connection">Check connection</button></div>
+      <p class="muted small" style="margin-top:18px">ESPN teams, including The Three Eyed Ravens, require a separate integration and will not appear through Yahoo access.</p>
+    </section>
 
-  <h2>Access and Privacy</h2>
-  <p>
-    This is a personal-use application. It does not
-    request account passwords or perform roster
-    transactions. Yahoo account authorization will
-    use OAuth.
-  </p>
+    <section id="tab-lineups" class="panel workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Lineup lab</p><h2>Starting lineup analysis</h2><p class="lead">A dedicated place for start/sit decisions, matchup context and confidence levels.</p>
+      <div class="empty"><div class="symbol" aria-hidden="true">📋</div><h3>Waiting for your live roster</h3><p>Once Yahoo permits access and we add the roster endpoint, your eligible starters and bench players can appear here.</p><button class="btn" type="button" data-goto="connection">View connection status</button></div>
+    </section>
 
-  <p class="status">
-    This project is not affiliated with or endorsed
-    by Yahoo.
-  </p>
-  <h2>Yahoo Fantasy Connection</h2>
-<p id="yahoo-status">
-  Ready to test Yahoo API authorization.
-</p>
-<button id="yahoo-test" type="button">
-  Test Yahoo Connection
-</button>
+    <section id="tab-waivers" class="panel workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Roster strategy</p><h2>Waiver wire</h2><p class="lead">A future workspace for waiver candidates, roster fits and FAAB budgeting.</p>
+      <div class="empty"><div class="symbol" aria-hidden="true">🔎</div><h3>Waiver data not connected</h3><p>Player availability is league-specific. This view will stay empty until the authorized API can retrieve your league information.</p><button class="btn" type="button" data-goto="connection">View connection status</button></div>
+    </section>
 
+    <section id="tab-connection" class="panel workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Connection diagnostics</p><h2>Yahoo Fantasy API</h2><p class="lead">This test authorizes your account and asks our Cloudflare Worker to verify Fantasy API access. It does not load or save league data.</p>
+      <div class="card">
+        <p class="tiny-heading">Current result</p>
+        <p id="connection-status" role="status" aria-live="polite">Not tested in this browser session.</p>
+        <div class="actions"><button class="btn primary" type="button" data-connect>Connect to Yahoo</button><button class="btn" id="test-api" type="button" hidden>Test Yahoo API access</button></div>
+        <p class="muted small">If Yahoo returns HTTP 403 again, the OAuth flow is working, but API permissions still need attention. This test cannot establish the exact reason for a 403.</p>
+      </div>
+      <div class="note">Never paste your Yahoo password, authorization codes, access tokens or Client Secret into this page's code. The Client ID is requested only when you initiate authorization.</div>
+    </section>
+  </main>
 
+  <footer class="footer">
+    <div>Personal, noncommercial project · Read-only Yahoo integration</div>
+    <div style="margin-top:6px">Fantasy data provided by <a href="https://sports.yahoo.com/fantasy/" target="_blank" rel="noopener noreferrer">Yahoo Fantasy</a> where Yahoo Fantasy information is displayed. Not affiliated with or endorsed by Yahoo.</div>
+  </footer>
+</div>
 <script>
-const redirectUri =
-  "https://karmonic.github.io/fantasy-command-center/";
+(() => {
+  "use strict";
+  const REDIRECT_URI = "https://karmonic.github.io/fantasy-command-center/";
+  const WORKER_URL = "https://fantasy-command-center-api.karmonic.workers.dev/test";
+  const statusEls = [document.getElementById("home-status"), document.getElementById("connection-status")];
+  const testButton = document.getElementById("test-api");
+  let pendingCode = null;
 
-function base64url(bytes) {
-  return btoa(String.fromCharCode(...bytes))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-async function connectYahoo() {
-  const clientId = prompt(
-    "Paste your Yahoo Client ID (Consumer Key):"
-  );
-
-  if (!clientId || !clientId.trim()) return;
-
-  const verifier = base64url(
-    crypto.getRandomValues(new Uint8Array(32))
-  );
-
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(verifier)
-  );
-
-  const challenge = base64url(new Uint8Array(digest));
-  const state = base64url(
-    crypto.getRandomValues(new Uint8Array(16))
-  );
-
-  sessionStorage.setItem("yahoo_verifier", verifier);
-  sessionStorage.setItem("yahoo_state", state);
-  sessionStorage.setItem("yahoo_client_id", clientId.trim());
-
-  const url = new URL(
-    "https://api.login.yahoo.com/oauth2/request_auth"
-  );
-
-  url.searchParams.set("client_id", clientId.trim());
-  url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("response_type", "code");
-  url.searchParams.set("state", state);
-  url.searchParams.set("code_challenge", challenge);
-  url.searchParams.set("code_challenge_method", "S256");
-
-  window.location.assign(url.toString());
-}
-
-document.getElementById("yahoo-test").onclick = connectYahoo;
-
-document.getElementById("yahoo-test").textContent =
-  "Connect to Yahoo Fantasy";
-
-const params = new URLSearchParams(window.location.search);
-const status = document.getElementById("yahoo-status");
-
-if (params.has("code") || params.has("error")) {
-  const returnedState = params.get("state");
-  const expectedState = sessionStorage.getItem("yahoo_state");
-
-  if (
-    !expectedState ||
-    !returnedState ||
-    returnedState !== expectedState
-  ) {
-    status.textContent = "Authorization state mismatch.";
-  } else if (params.has("error")) {
-    status.textContent =
-      "Yahoo authorization error: " + params.get("error");
-  } else {
-    sessionStorage.setItem(
-      "yahoo_pending_code",
-      params.get("code")
-    );
-    status.textContent =
-      "Yahoo authorization returned successfully. Token test pending.";
+  function showStatus(message, kind = "pending") {
+    for (const el of statusEls) el.textContent = message;
+    const label = document.getElementById("connection-label");
+    const dot = document.getElementById("connection-dot");
+    const apiLabel = document.getElementById("api-status-label");
+    const apiIcon = document.getElementById("api-status-icon");
+    label.textContent = kind === "good" ? "API test passed" : kind === "bad" ? "API access blocked" : "API access pending";
+    dot.className = "dot" + (kind === "good" ? " good" : kind === "bad" ? " bad" : "");
+    apiLabel.textContent = message;
+    apiIcon.textContent = kind === "good" ? "✓" : kind === "bad" ? "!" : "◷";
+    apiIcon.className = kind === "good" ? "check" : "waiting";
   }
 
-  history.replaceState({}, "", redirectUri);
-}
-</script>
+  function openTab(tabName) {
+    document.querySelectorAll("[data-tab]").forEach(button => {
+      button.setAttribute("aria-selected", String(button.dataset.tab === tabName));
+    });
+    document.querySelectorAll("main .panel").forEach(panel => {
+      panel.hidden = panel.id !== "tab-" + tabName;
+    });
+  }
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    button.addEventListener("click", () => openTab(button.dataset.tab));
+  });
+  document.querySelectorAll("[data-goto]").forEach(button => {
+    button.addEventListener("click", () => { openTab(button.dataset.goto); window.scrollTo(0, 0); });
+  });
 
-
-<script>
-const tokenButton = document.createElement("button");
-tokenButton.textContent = "Test Yahoo API Access";
-
-document.getElementById("yahoo-test")
-  .insertAdjacentElement("afterend", tokenButton);
-
-tokenButton.onclick = async function () {
-  const status = document.getElementById("yahoo-status");
-  const code = sessionStorage.getItem("yahoo_pending_code");
-  const verifier = sessionStorage.getItem("yahoo_verifier");
-  const clientId = sessionStorage.getItem("yahoo_client_id");
-
-  if (!code || !verifier || !clientId) {
-    status.textContent =
-      "Connect to Yahoo again before testing API access.";
-    return;
+  function base64url(bytes) {
+    let raw = "";
+    for (const value of bytes) raw += String.fromCharCode(value);
+    return btoa(raw).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 
-  tokenButton.disabled = true;
-  status.textContent = "Testing Yahoo API access...";
+  async function connectYahoo() {
+    const clientId = prompt("Paste your Yahoo Client ID (Consumer Key). Do not enter a Client Secret:");
+    if (!clientId || !clientId.trim()) return;
+    if (!window.crypto?.subtle) { showStatus("Secure browser crypto is not available.", "bad"); return; }
+    try {
+      const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+      const state = base64url(crypto.getRandomValues(new Uint8Array(16)));
+      sessionStorage.setItem("yahoo_verifier", verifier);
+      sessionStorage.setItem("yahoo_state", state);
+      sessionStorage.setItem("yahoo_client_id", clientId.trim());
+      sessionStorage.removeItem("yahoo_pending_code");
+      const url = new URL("https://api.login.yahoo.com/oauth2/request_auth");
+      url.search = new URLSearchParams({
+        client_id: clientId.trim(), redirect_uri: REDIRECT_URI, response_type: "code",
+        state, code_challenge: base64url(new Uint8Array(digest)), code_challenge_method: "S256"
+      }).toString();
+      window.location.assign(url.toString());
+    } catch (error) { showStatus("Couldn't start Yahoo authorization. Please retry.", "bad"); }
+  }
 
-  try {
-    const response = await fetch(
-      "https://fantasy-command-center-api.karmonic.workers.dev/test",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          code,
-          verifier,
-          clientId
-        })
-      }
-    );
-
-    const result = await response.json();
-
-    if (result.fantasyApiSuccess) {
-      status.textContent =
-        "SUCCESS! Yahoo Fantasy API access is working!";
-    } else if (result.tokenSuccess) {
-      status.textContent =
-        "Yahoo login worked, but Fantasy API returned HTTP " +
-        result.httpStatus;
-    } else {
-      status.textContent =
-        "Test stopped at " + (result.stage || "unknown") +
-        (result.httpStatus ? " (HTTP " + result.httpStatus + ")" : "");
+  async function testYahooAPI() {
+    const code = pendingCode || sessionStorage.getItem("yahoo_pending_code");
+    const verifier = sessionStorage.getItem("yahoo_verifier");
+    const clientId = sessionStorage.getItem("yahoo_client_id");
+    if (!code || !verifier || !clientId) {
+      showStatus("Connect to Yahoo again to get a fresh authorization code.");
+      openTab("connection");
+      return;
     }
-  } catch (error) {
-    status.textContent =
-      "Unable to contact the Cloudflare backend.";
-  } finally {
+    testButton.disabled = true;
+    showStatus("Checking Yahoo Fantasy API access…");
+    // Authorization codes are single use. Clear the local copy before testing.
+    pendingCode = null;
     sessionStorage.removeItem("yahoo_pending_code");
-    tokenButton.disabled = false;
+    try {
+      const response = await fetch(WORKER_URL, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, verifier, clientId })
+      });
+      const result = await response.json();
+      if (result.fantasyApiSuccess) {
+        showStatus("Yahoo Fantasy API access confirmed! Roster syncing is the next development step.", "good");
+      } else if (result.tokenSuccess) {
+        showStatus("Yahoo login succeeded, but Fantasy API returned HTTP " + result.httpStatus + ".", "bad");
+      } else {
+        showStatus("Yahoo connection test stopped at " + (result.stage || "unknown") +
+          (result.httpStatus ? " (HTTP " + result.httpStatus + ")" : "") +
+          ". Connect again for a new code.", "bad");
+      }
+    } catch (error) { showStatus("Cloudflare connection failed. Try again after checking the Worker.", "bad"); }
+    finally { testButton.disabled = false; testButton.hidden = true; }
   }
-};
+
+  document.querySelectorAll("[data-connect]").forEach(button => button.addEventListener("click", connectYahoo));
+  testButton.addEventListener("click", testYahooAPI);
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("code") || params.has("error")) {
+    // Remove the authorization code from the address bar immediately.
+    history.replaceState({}, "", REDIRECT_URI);
+    const expectedState = sessionStorage.getItem("yahoo_state");
+    const validState = !!expectedState && !!params.get("state") && params.get("state") === expectedState;
+    sessionStorage.removeItem("yahoo_state");
+    if (!validState) {
+      showStatus("Yahoo authorization state mismatch. Please connect again.", "bad");
+      openTab("connection");
+    } else if (params.has("error")) {
+      showStatus("Yahoo authorization error: " + params.get("error"), "bad");
+      openTab("connection");
+    } else {
+      pendingCode = params.get("code");
+      sessionStorage.setItem("yahoo_pending_code", pendingCode);
+      testButton.hidden = false;
+      showStatus("Yahoo authorization completed. Checking API access…");
+      openTab("connection");
+      testYahooAPI();
+    }
+  }
+})();
 </script>
-
-
 </body>
 </html>
