@@ -66,6 +66,14 @@
     .empty .symbol { font-size:39px; }
     .empty h3 { font-size:19px; margin:9px 0; }
     .empty p { color:var(--muted); max-width:470px; margin:0 auto 16px; }
+    .roster-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }
+    .roster-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13px; }
+    .roster-table th { text-align:left; font-size:11px; letter-spacing:.05em; color:var(--muted); text-transform:uppercase; }
+    .roster-table th, .roster-table td { padding:9px 5px; border-bottom:1px solid var(--line); }
+    .roster-table td:first-child { font-weight:700; }
+    .roster-table td:last-child, .roster-table th:last-child { text-align:right; }
+    .roster-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+    .roster-status { color:var(--muted); font-size:12px; margin:8px 0; }
     .footer { margin-top:38px; padding:22px 0; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
     .footer a { color:#b5daf2; }
     @media(max-width:760px) {
@@ -73,7 +81,7 @@
       .header { align-items:flex-start; }
       .hero { grid-template-columns:1fr; }
       .hero-main, .hero-aside { padding:23px; }
-      .grid { grid-template-columns:1fr; }
+      .grid, .roster-grid { grid-template-columns:1fr; }
       .two { grid-template-columns:1fr; }
       .card { padding:19px; }
       .tabs { margin:20px -16px 20px; padding:0 16px 7px; }
@@ -136,9 +144,10 @@
     </section>
 
     <section id="tab-teams" class="panel workspace" role="tabpanel" hidden>
-      <p class="eyebrow">Teams</p><h2>Your Yahoo teams</h2><p class="lead">We'll populate current leagues and rosters only after Yahoo authorizes the Fantasy API request.</p>
-      <div class="empty"><div class="symbol" aria-hidden="true">🏟️</div><h3>Roster sync not connected</h3><p>The Yahoo login flow works, but the Fantasy API previously returned HTTP 403. We won't invent standings or rosters.</p><button class="btn primary" type="button" data-goto="connection">Check connection</button></div>
-      <p class="muted small" style="margin-top:18px">ESPN teams, including The Three Eyed Ravens, require a separate integration and will not appear through Yahoo access.</p>
+      <p class="eyebrow">Teams</p><h2>Your Yahoo teams</h2><p class="lead">When Yahoo permits Fantasy API access, your current NFL rosters will appear here after connecting.</p>
+      <div class="empty" id="roster-empty"><div class="symbol" aria-hidden="true">🏟️</div><h3>Roster sync not connected</h3><p>The Yahoo login flow works, but the Fantasy API previously returned HTTP 403. We won't invent standings or rosters.</p><button class="btn primary" type="button" data-goto="connection">Check connection</button></div>
+      <div id="roster-results" class="roster-grid" aria-live="polite" hidden></div>
+      <p class="muted small" style="margin-top:18px">On-demand sync only: Yahoo data is shown in this browser session, not saved or cached. If you refresh, connect to Yahoo again. ESPN teams, including The Three Eyed Ravens, require a separate integration.</p>
     </section>
 
     <section id="tab-lineups" class="panel workspace" role="tabpanel" hidden>
@@ -152,7 +161,7 @@
     </section>
 
     <section id="tab-connection" class="panel workspace" role="tabpanel" hidden>
-      <p class="eyebrow">Connection diagnostics</p><h2>Yahoo Fantasy API</h2><p class="lead">This test authorizes your account and asks our Cloudflare Worker to verify Fantasy API access. It does not load or save league data.</p>
+      <p class="eyebrow">Connection diagnostics</p><h2>Yahoo Fantasy API</h2><p class="lead">This test authorizes your account and asks our Cloudflare Worker to load your four Yahoo teams and current rosters, if Fantasy API access is active. No roster data is saved.</p>
       <div class="card">
         <p class="tiny-heading">Current result</p>
         <p id="connection-status" role="status" aria-live="polite">Not tested in this browser session.</p>
@@ -188,6 +197,54 @@
     apiLabel.textContent = message;
     apiIcon.textContent = kind === "good" ? "✓" : kind === "bad" ? "!" : "◷";
     apiIcon.className = kind === "good" ? "check" : "waiting";
+  }
+
+  function renderRosters(teams) {
+    const container = document.getElementById("roster-results");
+    container.replaceChildren();
+    for (const team of teams) {
+      const card = document.createElement("article");
+      card.className = "card";
+      const title = document.createElement("h3");
+      title.textContent = team.name;
+      card.append(title);
+      const subtitle = document.createElement("p");
+      subtitle.className = "roster-status";
+      subtitle.textContent = !team.loaded ? "Roster request HTTP " + team.httpStatus
+        : team.players.length ? team.players.length + " roster players · Yahoo Fantasy"
+        : "No players returned for this roster";
+      card.append(subtitle);
+      if (team.loaded && team.players.length) {
+        const table = document.createElement("table");
+        table.className = "roster-table";
+        const head = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        for (const text of ["Player", "Position", "Slot"]) {
+          const th = document.createElement("th"); th.textContent = text; headRow.append(th);
+        }
+        head.append(headRow); table.append(head);
+        const body = document.createElement("tbody");
+        for (const player of team.players) {
+          const row = document.createElement("tr");
+          for (const text of [player.name + (player.proTeam ? " · " + player.proTeam : ""),
+                               player.position || "—", player.slot || "—"]) {
+            const cell = document.createElement("td"); cell.textContent = text; row.append(cell);
+          }
+          body.append(row);
+        }
+        table.append(body); card.append(table);
+      }
+      container.append(card);
+    }
+    container.hidden = teams.length === 0;
+    document.getElementById("roster-empty").hidden = teams.length > 0;
+    const labels = document.querySelectorAll("#overview-teams .card");
+    for (const label of labels) {
+      const title = label.querySelector("h3")?.textContent || "";
+      const match = teams.find(t => title.toLowerCase().replace(/[^a-z0-9]/g, "") ===
+        t.name.toLowerCase().replace(/[^a-z0-9]/g, ""));
+      if (match) label.querySelector(".tag").textContent = match.loaded ? "Roster received" : "Roster unavailable";
+    }
   }
 
   function openTab(tabName) {
@@ -253,7 +310,15 @@
       });
       const result = await response.json();
       if (result.fantasyApiSuccess) {
-        showStatus("Yahoo Fantasy API access confirmed! Roster syncing is the next development step.", "good");
+        const teams = Array.isArray(result.teams) ? result.teams : [];
+        if (teams.length) {
+          renderRosters(teams);
+          showStatus("Yahoo API connected! Loaded " + teams.filter(t => t.loaded).length +
+            " of " + teams.length + " matching team rosters.", "good");
+          openTab("teams");
+        } else {
+          showStatus(result.message || "Yahoo API connected, but no matching team names were found.", "good");
+        }
       } else if (result.tokenSuccess) {
         showStatus("Yahoo login succeeded, but Fantasy API returned HTTP " + result.httpStatus + ".", "bad");
       } else {
@@ -262,7 +327,12 @@
           ". Connect again for a new code.", "bad");
       }
     } catch (error) { showStatus("Cloudflare connection failed. Try again after checking the Worker.", "bad"); }
-    finally { testButton.disabled = false; testButton.hidden = true; }
+    finally {
+      sessionStorage.removeItem("yahoo_verifier");
+      sessionStorage.removeItem("yahoo_client_id");
+      testButton.disabled = false;
+      testButton.hidden = true;
+    }
   }
 
   document.querySelectorAll("[data-connect]").forEach(button => button.addEventListener("click", connectYahoo));
