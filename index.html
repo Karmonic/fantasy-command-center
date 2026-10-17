@@ -154,9 +154,10 @@ if (params.has("code") || params.has("error")) {
 }
 </script>
 
+
 <script>
 const tokenButton = document.createElement("button");
-tokenButton.textContent = "Test Yahoo API Token";
+tokenButton.textContent = "Test Yahoo API Access";
 
 document.getElementById("yahoo-test")
   .insertAdjacentElement("afterend", tokenButton);
@@ -169,58 +170,53 @@ tokenButton.onclick = async function () {
 
   if (!code || !verifier || !clientId) {
     status.textContent =
-      "Authorization information missing. Connect to Yahoo again.";
+      "Connect to Yahoo again before testing API access.";
     return;
   }
 
   tokenButton.disabled = true;
-  status.textContent = "Requesting access token from Yahoo...";
+  status.textContent = "Testing Yahoo API access...";
 
   try {
     const response = await fetch(
-      "https://api.login.yahoo.com/oauth2/get_token",
+      "https://fantasy-command-center-api.karmonic.workers.dev/test",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/json"
         },
-        body: new URLSearchParams({
-          grant_type: "authorization_code",
-          client_id: clientId,
-          redirect_uri:
-            "https://karmonic.github.io/fantasy-command-center/",
-          code: code,
-          code_verifier: verifier
+        body: JSON.stringify({
+          code,
+          verifier,
+          clientId
         })
       }
     );
 
-    if (!response.ok) {
-      status.textContent =
-        "Yahoo returned HTTP " + response.status +
-        ". A new authorization may be needed.";
-      return;
-    }
+    const result = await response.json();
 
-    const data = await response.json();
-
-    if (data.access_token) {
-      window.yahooAccessToken = data.access_token;
-      sessionStorage.removeItem("yahoo_pending_code");
+    if (result.fantasyApiSuccess) {
       status.textContent =
-        "SUCCESS! Yahoo issued an access token.";
+        "SUCCESS! Yahoo Fantasy API access is working!";
+    } else if (result.tokenSuccess) {
+      status.textContent =
+        "Yahoo login worked, but Fantasy API returned HTTP " +
+        result.httpStatus;
     } else {
       status.textContent =
-        "No access token received.";
+        "Test stopped at " + (result.stage || "unknown") +
+        (result.httpStatus ? " (HTTP " + result.httpStatus + ")" : "");
     }
   } catch (error) {
     status.textContent =
-      "Browser blocked the token request or a network error occurred.";
+      "Unable to contact the Cloudflare backend.";
   } finally {
+    sessionStorage.removeItem("yahoo_pending_code");
     tokenButton.disabled = false;
   }
 };
 </script>
+
 
 </body>
 </html>
