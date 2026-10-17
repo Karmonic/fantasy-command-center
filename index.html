@@ -45,12 +45,12 @@
     .section-head { display:flex; justify-content:space-between; align-items:end; gap:10px; margin:31px 0 14px; }
     .section-head h2 { margin:0; font-size:21px; letter-spacing:-.4px; }
     .muted { color:var(--muted); } .small { font-size:13px; }
-    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     .card { background:var(--panel); border:1px solid var(--line); border-radius:17px; padding:22px; min-width:0; }
     .card h3 { margin:0 0 5px; font-size:18px; }
     .card p { margin:6px 0; }
     .team-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; font-weight:900; color:#0b1d2c; background:#7dc7e9; margin-bottom:16px; }
-    .team-icon.green { background:#84dbc1; } .team-icon.gold { background:#ffcf81; }
+    .team-icon.green { background:#84dbc1; } .team-icon.gold { background:#ffcf81; } .team-icon.purple { background:#d1b3ff; }
     .tag { display:inline-block; color:#d9e5f3; background:#26364c; border:1px solid #354960; border-radius:7px; padding:3px 8px; font-size:11px; font-weight:800; }
     .note { border-left:3px solid var(--amber); background:#302d28; border-radius:0 10px 10px 0; padding:13px 16px; color:#ffedcd; font-size:13px; margin-top:18px; }
     .status-text { font-size:14px; min-height:1.5em; color:#d9e7f7; margin-top:16px; overflow-wrap:anywhere; }
@@ -125,6 +125,7 @@
         <div class="card"><div class="team-icon">F</div><h3>Foxholes</h3><p class="muted small">Yahoo · work league</p><span class="tag">Awaiting sync</span></div>
         <div class="card"><div class="team-icon green">S</div><h3>Sol's Folly</h3><p class="muted small">Yahoo · public league</p><span class="tag">Awaiting sync</span></div>
         <div class="card"><div class="team-icon gold">M</div><h3>Muthiny on the Bounty</h3><p class="muted small">Yahoo · Death League</p><span class="tag">Awaiting sync</span></div>
+        <div class="card"><div class="team-icon purple">L</div><h3>Lamarvolous Bastards</h3><p class="muted small">Yahoo · public league</p><span class="tag">Awaiting sync</span></div>
       </div>
       <div class="note">The teams above are familiar names added for navigation, not information retrieved from Yahoo. Scores, lineups and player data will only appear after real API access is verified and roster retrieval is implemented.</div>
       <div class="section-head"><h2>Built for the decisions that matter</h2></div>
