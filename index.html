@@ -61,5 +61,19 @@
     This project is not affiliated with or endorsed
     by Yahoo.
   </p>
+  <h2>Yahoo Fantasy Connection</h2>
+<p id="yahoo-status">
+  Ready to test Yahoo API authorization.
+</p>
+<button id="yahoo-test" type="button">
+  Test Yahoo Connection
+</button>
+
+<script>
+document.getElementById("yahoo-test").onclick = function () {
+  document.getElementById("yahoo-status").textContent =
+    "Test button is working. Yahoo authentication is not configured yet.";
+};
+</script>
 </body>
 </html>
