@@ -69,11 +69,90 @@
   Test Yahoo Connection
 </button>
 
+
 <script>
-document.getElementById("yahoo-test").onclick = function () {
-  document.getElementById("yahoo-status").textContent =
-    "Test button is working. Yahoo authentication is not configured yet.";
-};
+const redirectUri =
+  "https://karmonic.github.io/fantasy-command-center/";
+
+function base64url(bytes) {
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+async function connectYahoo() {
+  const clientId = prompt(
+    "Paste your Yahoo Client ID (Consumer Key):"
+  );
+
+  if (!clientId || !clientId.trim()) return;
+
+  const verifier = base64url(
+    crypto.getRandomValues(new Uint8Array(32))
+  );
+
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(verifier)
+  );
+
+  const challenge = base64url(new Uint8Array(digest));
+  const state = base64url(
+    crypto.getRandomValues(new Uint8Array(16))
+  );
+
+  sessionStorage.setItem("yahoo_verifier", verifier);
+  sessionStorage.setItem("yahoo_state", state);
+  sessionStorage.setItem("yahoo_client_id", clientId.trim());
+
+  const url = new URL(
+    "https://api.login.yahoo.com/oauth2/request_auth"
+  );
+
+  url.searchParams.set("client_id", clientId.trim());
+  url.searchParams.set("redirect_uri", redirectUri);
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("state", state);
+  url.searchParams.set("code_challenge", challenge);
+  url.searchParams.set("code_challenge_method", "S256");
+
+  window.location.assign(url.toString());
+}
+
+document.getElementById("yahoo-test").onclick = connectYahoo;
+
+document.getElementById("yahoo-test").textContent =
+  "Connect to Yahoo Fantasy";
+
+const params = new URLSearchParams(window.location.search);
+const status = document.getElementById("yahoo-status");
+
+if (params.has("code") || params.has("error")) {
+  const returnedState = params.get("state");
+  const expectedState = sessionStorage.getItem("yahoo_state");
+
+  if (
+    !expectedState ||
+    !returnedState ||
+    returnedState !== expectedState
+  ) {
+    status.textContent = "Authorization state mismatch.";
+  } else if (params.has("error")) {
+    status.textContent =
+      "Yahoo authorization error: " + params.get("error");
+  } else {
+    sessionStorage.setItem(
+      "yahoo_pending_code",
+      params.get("code")
+    );
+    status.textContent =
+      "Yahoo authorization returned successfully. Token test pending.";
+  }
+
+  history.replaceState({}, "", redirectUri);
+}
 </script>
+
 </body>
 </html>
