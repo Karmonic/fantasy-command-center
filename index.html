@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a1020">
+  <meta name="theme-color" content="#0B0713">
   <meta name="description" content="A private, mobile-friendly command center for your Yahoo fantasy teams.">
   <title>Fantasy Command Center</title>
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -12,9 +12,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Fantasy CC">
   <style>
-    :root { color-scheme: dark; --bg:#0a1020; --panel:#141e31; --panel2:#1a2940; --line:#2c3c53; --ink:#f5f8fd; --muted:#a9bad1; --blue:#63c9ff; --teal:#6ee4c8; --amber:#f6c875; --red:#ff9eaa; }
+    :root { color-scheme: dark; --bg:#0B0713; --panel:#1A1028; --panel2:#241631; --line:#3D2A54; --ink:#F4F1FA; --muted:#B9AFCB; --blue:#B974FF; --teal:#79DDC4; --amber:#F6C875; --red:#FF9EAA; }
     * { box-sizing:border-box; }
-    body { margin:0; color:var(--ink); background:radial-gradient(circle at 75% -10%, #193557 0, transparent 32%),var(--bg); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
+    body { margin:0; color:var(--ink); background:radial-gradient(circle at 80% -18%, #39205F 0, transparent 38%),radial-gradient(circle at 0 52%, #1A0E29 0, transparent 45%),var(--bg); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
     a { color:var(--blue); }
     button { font:inherit; cursor:pointer; }
     button:focus-visible, a:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
@@ -24,27 +24,27 @@
     .logo { width:48px; height:48px; flex:none; display:block; border-radius:15px; object-fit:cover; box-shadow:0 9px 28px #0004; }
     .brand h1 { font-size:19px; letter-spacing:-.5px; line-height:1.15; margin:0; }
     .sub { font-size:12px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin:4px 0 0; }
-    .pill { display:inline-flex; align-items:center; gap:8px; border-radius:999px; background:#213147; border:1px solid #334861; padding:7px 12px; color:#d4e1f1; font-size:12px; font-weight:700; }
+    .pill { display:inline-flex; align-items:center; gap:8px; border-radius:999px; background:#23192F; border:1px solid #4B3660; padding:7px 12px; color:#E6DDF2; font-size:12px; font-weight:700; }
     .dot { width:8px; height:8px; border-radius:50%; background:var(--amber); flex:none; }
     .dot.good { background:var(--teal); } .dot.bad { background:var(--red); }
     .tabs { display:flex; gap:8px; overflow-x:auto; margin:25px 0 26px; padding-bottom:4px; scrollbar-width:thin; }
     .tab { color:var(--muted); border:1px solid transparent; background:transparent; white-space:nowrap; padding:9px 17px; border-radius:11px; font-weight:700; }
-    .tab[aria-selected="true"] { background:#223b59; border-color:#365677; color:var(--ink); }
+    .tab[aria-selected="true"] { background:#322044; border-color:#7548A0; color:var(--ink); }
     .tab:hover { color:var(--ink); }
     .panel[hidden] { display:none; }
     .eyebrow { color:var(--teal); text-transform:uppercase; letter-spacing:.13em; font-weight:800; font-size:12px; margin:0 0 8px; }
-    .hero { display:grid; grid-template-columns:1.35fr 1fr; background:linear-gradient(112deg,#1d3753,#152439 70%); border:1px solid #34506d; border-radius:20px; overflow:hidden; }
+    .hero { display:grid; grid-template-columns:1.35fr 1fr; background:linear-gradient(112deg,#2A173C,#160E22 72%); border:1px solid #55346F; border-radius:20px; overflow:hidden; }
     .hero-main { padding:34px; }
     .hero h2 { margin:0 0 10px; font-size:clamp(26px,4vw,39px); line-height:1.14; letter-spacing:-1px; }
-    .hero p { color:#c6d6e9; max-width:540px; margin:0 0 20px; }
-    .hero-aside { padding:30px; background:#111e2e90; display:flex; flex-direction:column; justify-content:center; gap:13px; }
+    .hero p { color:#D5C9E5; max-width:540px; margin:0 0 20px; }
+    .hero-aside { padding:30px; background:#0E091B99; display:flex; flex-direction:column; justify-content:center; gap:13px; }
     .tiny-heading { color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.08em; font-size:11px; }
     .connection { display:flex; gap:10px; align-items:center; font-size:14px; }
     .check { color:var(--teal); font-weight:900; }
     .waiting { color:var(--amber); font-weight:900; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .btn { border:1px solid #416385; background:#243b56; color:white; border-radius:11px; padding:12px 16px; font-weight:800; }
-    .btn.primary { background:var(--blue); color:#09243b; border-color:var(--blue); }
+    .btn { border:1px solid #674683; background:#332345; color:white; border-radius:11px; padding:12px 16px; font-weight:800; }
+    .btn.primary { background:var(--blue); color:#150821; border-color:var(--blue); }
     .btn:disabled { opacity:.52; cursor:wait; }
     .btn:hover:not(:disabled) { filter:brightness(1.1); }
     .section-head { display:flex; justify-content:space-between; align-items:end; gap:10px; margin:31px 0 14px; }
@@ -54,11 +54,11 @@
     .card { background:var(--panel); border:1px solid var(--line); border-radius:17px; padding:22px; min-width:0; }
     .card h3 { margin:0 0 5px; font-size:18px; }
     .card p { margin:6px 0; }
-    .team-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; font-weight:900; color:#0b1d2c; background:#7dc7e9; margin-bottom:16px; }
-    .team-icon.green { background:#84dbc1; } .team-icon.gold { background:#ffcf81; } .team-icon.purple { background:#d1b3ff; }
-    .tag { display:inline-block; color:#d9e5f3; background:#26364c; border:1px solid #354960; border-radius:7px; padding:3px 8px; font-size:11px; font-weight:800; }
-    .note { border-left:3px solid var(--amber); background:#302d28; border-radius:0 10px 10px 0; padding:13px 16px; color:#ffedcd; font-size:13px; margin-top:18px; }
-    .status-text { font-size:14px; min-height:1.5em; color:#d9e7f7; margin-top:16px; overflow-wrap:anywhere; }
+    .team-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; font-weight:900; color:#230D36; background:#C189F9; margin-bottom:16px; }
+    .team-icon.green { background:#AE8AE0; } .team-icon.gold { background:#DFB3F2; } .team-icon.purple { background:#C9AAFA; }
+    .tag { display:inline-block; color:#E8DDF1; background:#2B1C3C; border:1px solid #513465; border-radius:7px; padding:3px 8px; font-size:11px; font-weight:800; }
+    .note { border-left:3px solid var(--amber); background:#302626; border-radius:0 10px 10px 0; padding:13px 16px; color:#FFF1DB; font-size:13px; margin-top:18px; }
+    .status-text { font-size:14px; min-height:1.5em; color:#EBE3F5; margin-top:16px; overflow-wrap:anywhere; }
     .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .feature { padding:22px; border:1px solid var(--line); background:var(--panel); border-radius:17px; }
     .feature .symbol { font-size:27px; margin-bottom:14px; display:block; }
@@ -67,7 +67,7 @@
     .workspace { max-width:770px; }
     .workspace h2 { font-size:29px; margin:0 0 7px; }
     .workspace .lead { color:var(--muted); margin:0 0 22px; }
-    .empty { padding:40px 28px; border:1px dashed #4a6583; background:#14253a; border-radius:18px; text-align:center; }
+    .empty { padding:40px 28px; border:1px dashed #75558C; background:#1A1128; border-radius:18px; text-align:center; }
     .empty .symbol { font-size:39px; }
     .empty h3 { font-size:19px; margin:9px 0; }
     .empty p { color:var(--muted); max-width:470px; margin:0 auto 16px; }
@@ -80,7 +80,7 @@
     .roster-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
     .roster-status { color:var(--muted); font-size:12px; margin:8px 0; }
     .footer { margin-top:38px; padding:22px 0; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
-    .footer a { color:#b5daf2; }
+    .footer a { color:#D0A9FF; }
     @media(max-width:760px) {
       .wrap { padding:18px 16px 85px; }
       .header { align-items:flex-start; }
@@ -96,6 +96,51 @@
     }
     @media(min-width:761px) and (max-width:930px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
     @media(prefers-reduced-motion:no-preference) { .btn,.tab { transition:filter .15s ease,background-color .15s ease; } }
+
+    /* FCC v2: violet/black match to the confirmed neon stadium icon */
+    .brand h1 { color:var(--ink); }
+    .eyebrow { color:#CD96FF; }
+    .hero { box-shadow:0 20px 60px #08031055, inset 0 1px 0 #FFFFFF0A; }
+    .tab[aria-selected="true"] { box-shadow:inset 0 1px 0 #BC7BFF33; }
+    .btn.primary { background:linear-gradient(135deg,#B965FF,#8B39DB); border-color:#B570ED; color:#FFF; box-shadow:0 5px 22px #7629BD33; }
+    .btn:hover:not(:disabled) { filter:brightness(1.13); }
+    .card,.feature { box-shadow:inset 0 1px 0 #FFFFFF08; }
+    .decision-workspace { max-width:980px; }
+    .tool-intro { margin:0 0 18px; color:var(--muted); font-size:14px; line-height:1.6; }
+    .tool-card { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:23px; margin-top:17px; }
+    .tool-title { margin:0 0 15px; font-size:16px; letter-spacing:-.2px; }
+    .field-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; }
+    .field { display:flex; flex-direction:column; gap:7px; min-width:0; }
+    .field.wide { grid-column:1/-1; }
+    .field label,.field-label { color:#DAD0E7; font-weight:700; font-size:13px; }
+    .field input,.field select,.field textarea { font:inherit; color:var(--ink); background:#10091C; border:1px solid #5C4074; border-radius:10px; padding:11px 12px; width:100%; max-width:100%; min-width:0; outline:0; }
+    .field select option { color:#F4F1FA; background:#1A1028; }
+    .field input:focus,.field select:focus,.field textarea:focus { border-color:#BC79FF; box-shadow:0 0 0 3px #AE65ED26; }
+    .field textarea { resize:vertical; min-height:75px; }
+    .field .hint { color:var(--muted); font-size:11px; font-weight:400; }
+    .comparison { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+    .scout { min-width:0; border:1px solid #4A3061; background:#130B21; padding:16px; border-radius:14px; }
+    .scout h3 { margin:0 0 15px; font-size:15px; }
+    .rating-row { display:flex; flex-direction:column; gap:6px; margin:10px 0; }
+    .rating-row label { color:#D9CFE8; font-size:12px; font-weight:650; }
+    .rating-row select { font:inherit; color:var(--ink); background:#21132F; border:1px solid #53336D; border-radius:8px; width:100%; padding:9px 10px; }
+    .tool-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:17px; }
+    .tool-result { border-radius:13px; padding:17px; margin-top:17px; background:#201331; border:1px solid #6B478C; }
+    .tool-result[hidden] { display:none; }
+    .tool-result strong { display:block; font-size:16px; margin-bottom:5px; }
+    .tool-result p { margin:7px 0; color:#E1D5EE; font-size:14px; }
+    .tool-result small { color:var(--muted); }
+    .tool-label { display:inline-block; font-size:11px; font-weight:800; color:#E1B6FF; letter-spacing:.09em; text-transform:uppercase; margin-bottom:8px; }
+    .muted-divider { border:0; border-top:1px solid var(--line); margin:18px 0; }
+    .note-violet { border-left:3px solid #AE70F4; background:#231530; color:#DBC7F3; padding:12px 14px; border-radius:0 10px 10px 0; font-size:13px; margin-top:15px; }
+    .budget-figure { font-variant-numeric:tabular-nums; color:#E7C4FF; }
+    @media(max-width:760px) {
+      .tool-card { padding:17px; }
+      .comparison,.field-grid { grid-template-columns:1fr; }
+      .scout { padding:13px; }
+      .field.wide { grid-column:auto; }
+      .tool-actions .btn { width:100%; }
+    }
   </style>
 </head>
 <body>
@@ -143,8 +188,8 @@
       <div class="note">The teams above are familiar names added for navigation, not information retrieved from Yahoo. Scores, lineups and player data will only appear after real API access is verified and roster retrieval is implemented.</div>
       <div class="section-head"><h2>Built for the decisions that matter</h2></div>
       <div class="two">
-        <div class="feature"><span class="symbol" aria-hidden="true">🏈</span><h3>Lineup checks</h3><p>See your starters and bench together when authorized roster access is available.</p></div>
-        <div class="feature"><span class="symbol" aria-hidden="true">📈</span><h3>Waiver review</h3><p>Plan adds and drops with clear roster needs and your own league settings.</p></div>
+        <div class="feature"><span class="symbol" aria-hidden="true">🏈</span><h3>Start / sit lab</h3><p>Compare two players using your own ratings while Yahoo live data is unavailable.</p><button class="btn" type="button" data-goto="lineups" style="margin-top:16px">Open lineup lab</button></div>
+        <div class="feature"><span class="symbol" aria-hidden="true">📈</span><h3>Waiver &amp; FAAB planner</h3><p>Calculate bid impact and build a simple add/drop plan, without submitting a claim.</p><button class="btn" type="button" data-goto="waivers" style="margin-top:16px">Open waiver planner</button></div>
       </div>
     </section>
 
@@ -155,14 +200,54 @@
       <p class="muted small" style="margin-top:18px">On-demand sync only: Yahoo data is shown in this browser session, not saved or cached. If you refresh, connect to Yahoo again. ESPN teams, including The Three Eyed Ravens, require a separate integration.</p>
     </section>
 
-    <section id="tab-lineups" class="panel workspace" role="tabpanel" hidden>
-      <p class="eyebrow">Lineup lab</p><h2>Starting lineup analysis</h2><p class="lead">A dedicated place for start/sit decisions, matchup context and confidence levels.</p>
-      <div class="empty"><div class="symbol" aria-hidden="true">📋</div><h3>Waiting for your live roster</h3><p>Once Yahoo permits access and we add the roster endpoint, your eligible starters and bench players can appear here.</p><button class="btn" type="button" data-goto="connection">View connection status</button></div>
+    <section id="tab-lineups" class="panel decision-workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Lineup lab</p>
+      <h2>Start / sit comparison</h2>
+      <p class="tool-intro">Compare two players for your Yahoo teams. Enter your own ratings for the five factors below. The comparison is a <strong>manual decision worksheet</strong>—not a live projection or an expert-consensus claim. No information entered here is saved.</p>
+      <form id="lineup-form" class="tool-card" autocomplete="off">
+        <h3 class="tool-title">Choose the matchup</h3>
+        <div class="field-grid">
+          <div class="field"><label for="lineup-team">Team</label><select id="lineup-team" required>
+            <option value="Foxholes">Foxholes</option><option value="Sol's Folly">Sol's Folly</option><option value="Muthiny on the Bounty">Muthiny on the Bounty</option><option value="Lamarvolous Bastards">Lamarvolous Bastards</option>
+          </select></div>
+          <div class="field"><label for="lineup-spot">Position / lineup slot</label><select id="lineup-spot"><option>FLEX</option><option>QB</option><option>RB</option><option>WR</option><option>TE</option><option>SUPERFLEX</option><option>Other</option></select></div>
+          <div class="field"><label for="lineup-a">Player A</label><input id="lineup-a" placeholder="Enter player name" maxlength="70" required></div>
+          <div class="field"><label for="lineup-b">Player B</label><input id="lineup-b" placeholder="Enter player name" maxlength="70" required></div>
+        </div>
+        <hr class="muted-divider">
+        <p class="field-label" style="margin:0 0 11px">Rate each player from 1 (unfavorable) to 5 (excellent).</p>
+        <div class="comparison">
+          <div class="scout"><h3>Player A · your assessment</h3><div id="lineup-factors-a"></div></div>
+          <div class="scout"><h3>Player B · your assessment</h3><div id="lineup-factors-b"></div></div>
+        </div>
+        <div class="field" style="margin-top:16px"><label for="lineup-context">Notes / counterargument (optional)</label><textarea id="lineup-context" placeholder="Weather, defensive matchup, injury uncertainty, snap share, or specific expert opinions you checked..."></textarea></div>
+        <div class="tool-actions"><button type="submit" class="btn primary">Compare players</button><button type="button" class="btn" id="lineup-copy" disabled>Copy comparison</button><button type="reset" class="btn">Clear</button></div>
+        <div class="tool-result" id="lineup-result" role="status" aria-live="polite" hidden></div>
+        <div class="note-violet">The comparison uses only ratings <em>you enter</em>. It does not retrieve analyst rankings, injury reports, or weather and should not be treated as a verified start/sit recommendation. We can add real data after API access is established.</div>
+      </form>
     </section>
 
-    <section id="tab-waivers" class="panel workspace" role="tabpanel" hidden>
-      <p class="eyebrow">Roster strategy</p><h2>Waiver wire</h2><p class="lead">A future workspace for waiver candidates, roster fits and FAAB budgeting.</p>
-      <div class="empty"><div class="symbol" aria-hidden="true">🔎</div><h3>Waiver data not connected</h3><p>Player availability is league-specific. This view will stay empty until the authorized API can retrieve your league information.</p><button class="btn" type="button" data-goto="connection">View connection status</button></div>
+    <section id="tab-waivers" class="panel decision-workspace" role="tabpanel" hidden>
+      <p class="eyebrow">Roster strategy</p>
+      <h2>Waiver &amp; FAAB planner</h2>
+      <p class="tool-intro">Plan a potential add/drop before submitting anything in Yahoo. Enter your actual league budget and proposed bid to see the impact. This is a <strong>read-only planning tool</strong>—it will not place waiver claims.</p>
+      <form id="waiver-form" class="tool-card" autocomplete="off">
+        <h3 class="tool-title">Plan a waiver move</h3>
+        <div class="field-grid">
+          <div class="field"><label for="waiver-team">Team</label><select id="waiver-team" required>
+            <option value="Foxholes">Foxholes</option><option value="Sol's Folly">Sol's Folly</option><option value="Muthiny on the Bounty">Muthiny on the Bounty</option><option value="Lamarvolous Bastards">Lamarvolous Bastards</option>
+          </select></div>
+          <div class="field"><label for="waiver-priority">Why this add?</label><select id="waiver-priority"><option>Starter upgrade</option><option>Injury replacement</option><option>Bench depth</option><option>Upside stash</option><option>Bye-week coverage</option><option>Other</option></select></div>
+          <div class="field"><label for="waiver-add">Player to add</label><input id="waiver-add" maxlength="70" placeholder="Waiver target" required></div>
+          <div class="field"><label for="waiver-drop">Potential player to drop</label><input id="waiver-drop" maxlength="70" placeholder="Optional if bench slot is empty"></div>
+          <div class="field"><label for="waiver-budget">FAAB remaining ($)</label><input id="waiver-budget" inputmode="decimal" type="number" min="0" max="100000" step="0.01" placeholder="e.g. 85" required></div>
+          <div class="field"><label for="waiver-bid">Your proposed bid ($)</label><input id="waiver-bid" inputmode="decimal" type="number" min="0" max="100000" step="0.01" placeholder="e.g. 12" required></div>
+          <div class="field wide"><label for="waiver-notes">Reasoning / alternatives (optional)</label><textarea id="waiver-notes" placeholder="Roster fit, injury concerns, expected workload, available alternatives, league rules..."></textarea></div>
+        </div>
+        <div class="tool-actions"><button type="submit" class="btn primary">Calculate budget impact</button><button type="button" id="waiver-copy" class="btn" disabled>Copy waiver plan</button><button type="reset" class="btn">Clear</button></div>
+        <div class="tool-result" id="waiver-result" role="status" aria-live="polite" hidden></div>
+        <div class="note-violet">This planner does not know your league's current available players, deadlines, or FAAB balances. Enter values you confirm in Yahoo. No claims are submitted, and inputs are not saved.</div>
+      </form>
     </section>
 
     <section id="tab-connection" class="panel workspace" role="tabpanel" hidden>
@@ -365,6 +450,146 @@
       testYahooAPI();
     }
   }
+})();
+</script>
+<script>
+(() => {
+  "use strict";
+  const FACTORS = [
+    { key: "usage", label: "Usage / role", weight: 3 },
+    { key: "health", label: "Health / availability", weight: 2 },
+    { key: "matchup", label: "Opponent / matchup", weight: 2 },
+    { key: "environment", label: "Weather / game environment", weight: 1 },
+    { key: "experts", label: "Expert consensus you verified", weight: 2 }
+  ];
+  const MAX_SCORE = FACTORS.reduce((sum, factor) => sum + factor.weight * 5, 0);
+  let lineupCopy = "";
+  let waiverCopy = "";
+
+  function makeFactors(side) {
+    const container = document.getElementById("lineup-factors-" + side);
+    for (const factor of FACTORS) {
+      const wrap = document.createElement("div");
+      wrap.className = "rating-row";
+      const label = document.createElement("label");
+      const id = "lineup-" + side + "-" + factor.key;
+      label.htmlFor = id;
+      label.textContent = factor.label;
+      const select = document.createElement("select");
+      select.id = id;
+      select.required = true;
+      for (const [value, text] of [["", "Choose a rating"], ["1", "1 · Very poor"], ["2", "2 · Below average"], ["3", "3 · Neutral"], ["4", "4 · Good"], ["5", "5 · Excellent"]]) {
+        const opt = document.createElement("option");
+        opt.value = value; opt.textContent = text;
+        select.append(opt);
+      }
+      wrap.append(label, select);
+      container.append(wrap);
+    }
+  }
+  makeFactors("a");
+  makeFactors("b");
+
+  function setResult(el, titleText, bodyLines, footnote) {
+    el.replaceChildren();
+    const top = document.createElement("span");
+    top.className = "tool-label";
+    top.textContent = "Your worksheet result";
+    const title = document.createElement("strong");
+    title.textContent = titleText;
+    el.append(top, title);
+    for (const line of bodyLines) {
+      const p = document.createElement("p");
+      p.textContent = line;
+      el.append(p);
+    }
+    const small = document.createElement("small");
+    small.textContent = footnote;
+    el.append(small);
+    el.hidden = false;
+  }
+
+  document.getElementById("lineup-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const a = document.getElementById("lineup-a").value.trim();
+    const b = document.getElementById("lineup-b").value.trim();
+    if (!a || !b) return;
+    const factorRatings = {};
+    const scores = { a: 0, b: 0 };
+    for (const side of ["a", "b"]) {
+      factorRatings[side] = {};
+      for (const factor of FACTORS) {
+        const raw = document.getElementById("lineup-" + side + "-" + factor.key).value;
+        if (!raw) return;
+        const rating = Number(raw);
+        factorRatings[side][factor.key] = rating;
+        scores[side] += rating * factor.weight;
+      }
+    }
+    const diff = Math.abs(scores.a - scores.b);
+    const verdict = scores.a === scores.b ? "Even comparison — neither player has an edge in your ratings" :
+      (scores.a > scores.b ? a : b) + " rates higher in your worksheet";
+    const team = document.getElementById("lineup-team").value;
+    const slot = document.getElementById("lineup-spot").value;
+    const details = FACTORS.map(f => f.label + ": " + a + " " + factorRatings.a[f.key] + "/5; " + b + " " + factorRatings.b[f.key] + "/5");
+    const notes = document.getElementById("lineup-context").value.trim();
+    lineupCopy = ["Fantasy Command Center · START/SIT WORKSHEET", "Team: " + team + " | Slot: " + slot,
+      a + ": " + scores.a + "/" + MAX_SCORE, b + ": " + scores.b + "/" + MAX_SCORE,
+      "Worksheet comparison: " + verdict, ...details, notes ? "Notes: " + notes : "",
+      "These are user-entered ratings, not live projections or verified expert consensus."].filter(Boolean).join("\n");
+    setResult(document.getElementById("lineup-result"), verdict,
+      [a + ": " + scores.a + "/" + MAX_SCORE + "  ·  " + b + ": " + scores.b + "/" + MAX_SCORE,
+       diff === 0 ? "No numerical edge. Check news, usage and league scoring before deciding." :
+         "Difference: " + diff + " weighted points. This reflects your inputs—not a statistical forecast.",
+       notes ? "Your notes: " + notes : "Add a counterargument or injury concern in Notes if one could change this call."],
+      "Weights: usage ×3, health ×2, matchup ×2, environment ×1, expert check ×2. No live data is used.");
+    document.getElementById("lineup-copy").disabled = false;
+  });
+
+  document.getElementById("waiver-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const add = document.getElementById("waiver-add").value.trim();
+    const drop = document.getElementById("waiver-drop").value.trim();
+    const team = document.getElementById("waiver-team").value;
+    const reason = document.getElementById("waiver-priority").value;
+    const budget = Number(document.getElementById("waiver-budget").value);
+    const bid = Number(document.getElementById("waiver-bid").value);
+    const notes = document.getElementById("waiver-notes").value.trim();
+    if (!add || !Number.isFinite(budget) || !Number.isFinite(bid) || budget < 0 || bid < 0) return;
+    const affordable = bid <= budget;
+    const remain = budget - bid;
+    const percent = budget > 0 ? (bid / budget * 100) : (bid === 0 ? 0 : Infinity);
+    const dollars = n => "$" + n.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+    const summary = affordable ? "Bid fits your entered budget" : "Bid exceeds your entered budget";
+    const lines = ["Proposed bid: " + dollars(bid) + " of " + dollars(budget) + " available (" + (Number.isFinite(percent) ? percent.toFixed(1) + "%" : "not available") + ").",
+      "Remaining if won: " + (affordable ? dollars(remain) : "Not affordable") + ".",
+      "Move: Add " + add + (drop ? " / drop " + drop : " / no drop named") + "."];
+    waiverCopy = ["Fantasy Command Center · WAIVER PLAN", "Team: " + team, "Reason: " + reason, "Add: " + add,
+      "Drop: " + (drop || "Not specified"), "FAAB remaining: " + dollars(budget), "Proposed bid: " + dollars(bid),
+      "Budget impact: " + summary, ...lines, notes ? "Notes: " + notes : "",
+      "Manual worksheet only: availability and waiver bids have not been checked against Yahoo."].filter(Boolean).join("\n");
+    setResult(document.getElementById("waiver-result"), summary, lines,
+      "Amounts use the FAAB values you entered. No bid was submitted or recommendation generated from live Yahoo data.");
+    document.getElementById("waiver-copy").disabled = false;
+  });
+
+  async function copyText(value, button) {
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      const oldText = button.textContent;
+      button.textContent = "Copied ✓";
+      button.setAttribute("aria-label", "Worksheet copied");
+      setTimeout(() => { button.textContent = oldText; button.removeAttribute("aria-label"); }, 1700);
+    } catch {
+      // Browser clipboard permissions vary; use a visible, copyable fallback.
+      window.prompt("Copy your worksheet:", value);
+    }
+  }
+  document.getElementById("lineup-copy").addEventListener("click", () => copyText(lineupCopy, document.getElementById("lineup-copy")));
+  document.getElementById("waiver-copy").addEventListener("click", () => copyText(waiverCopy, document.getElementById("waiver-copy")));
+  document.getElementById("lineup-form").addEventListener("reset", () => { lineupCopy = ""; document.getElementById("lineup-result").hidden = true; document.getElementById("lineup-copy").disabled = true; });
+  document.getElementById("waiver-form").addEventListener("reset", () => { waiverCopy = ""; document.getElementById("waiver-result").hidden = true; document.getElementById("waiver-copy").disabled = true; });
 })();
 </script>
 </body>
